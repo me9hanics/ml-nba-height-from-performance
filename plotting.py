@@ -228,7 +228,7 @@ def plot_in_rows(values_list, names):
     num_cols = 3  #Columns: Linear, logarithm, sqrt
     num_rows = num_plots
 
-    fig, axes = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(15, 5 * num_rows))
+    fig, axes = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(9, 3 * num_rows))
 
     for i, (values, name) in enumerate(zip(values_list, names)):
         ordered = sorted(values)
