@@ -1,0 +1,7 @@
+matplotlib==3.*
+numpy
+pandas
+scikit_learn==1.*
+scipy
+seaborn
+shap
