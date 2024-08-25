@@ -15,7 +15,7 @@ A summary of the best models:
 
 | Model                                                | Accuracy Score | +/-1 inch % | +/-2 inch % | +/-3 inch % | F1 Score | Error Range   |
 |------------------------------------------------------|----------------|-------------|-------------|-------------|----------|---------------|
-| Random forest: best classifier                       | **17.6%**      | 45.3%       | 70.3%       | 83.7%       | **0.155**| -8 , 6        |
+| Random forest classifier                       | **17.6%**      | 45.3%       | 70.3%       | 83.7%       | **0.155**| -8 , 6        |
 | Ensembled (manually biased) forest                   | 16.2%          | **49.0%**   | **71.3%**   | **85.4%**   | 0.149    | -8 , 5        |
 | Best RF regressor                                    | -              | **50.0%**   | **72.9%**   | **86.4%**   | -        | **-7 , 5**    |
 | Best gradient boosted regressor                      | -              | **49.9%**   | 69.1%       | 84.5%       | -        | -8 , 6        |
@@ -23,7 +23,7 @@ A summary of the best models:
 The pipeline picture:
 
 <div style="align: center;">
-    <div style="width: 500px; margin: 0 auto"><img src="img/pipeline.svg" title="NBA player height prediction from performance and playstyle - Pipeline" height="250px"/></div>
+    <div style="width: 500px; margin: 0 auto"><img src="img/pipeline.svg" title="NBA player height prediction from performance and playstyle - Pipeline" height="350px"/></div>
 </div>
 
 
@@ -31,7 +31,7 @@ The pipeline picture:
 
 ### ..to run?
 
-I recommend to just download (clone) the whole repository.
+- I recommend to just download (clone) the whole repository.
 
 After downloading the repository, in your command line shell go to this directory, choose/create a `Python`/`conda`/`virtualenv` environment and run `pip install -r requirements.txt`.(The dependencies are listed both in the `requirements.in` and the `requirements.txt` files.)<br>
 Then just run the `ml.ipynb` notebook cells in some Jupyter environment.
@@ -39,6 +39,8 @@ Then just run the `ml.ipynb` notebook cells in some Jupyter environment.
 If you want to fetch the data yourself (which is already fetched and stored in the `data` folder), you additionally need to run `pip install nba_api` to use the package, in the `fetch_players.ipynb` notebook.<br>
 
 ### ..is the data collected and processed?
+
+- Collected using the `nba_api` package, from the NBA stats website.
 
 The NBA website has a [statistics](https://www.nba.com/stats) subpage (and other subpages for other data) containing data about team statistics and player statistics, including biography (height, weight, age etc.) and career stats. There are multiple APIs provided by the website, but conviniently the `nba_api` package provides one Python interface to these APIs. The data is collected using this package, as shown in the `fetch_players.ipynb` notebook.<br>
 The separate career (and filtered career) and biographical datasets are stored in the respective `csv` files.
@@ -59,6 +61,8 @@ The explanation of the attributes is given in the `Explanation of attributes` se
 
 ### .. were the models chosen and trained?
 
+- Random forests, gradient boosted models, and specially ensembling forests were chosen, and a tree for comparison. Training and test data is split in a way, that every player appears in only one of the datasets.
+
 As instances of data (players) are rare, noisy (players play very different regardless of height) but attributes are common, more basic models are good choices such as random forests. For improved results, gradient boosted models are also trained. These models however don't have enough data and computing power (e.g. hyperparameter tuning) to perform as well as they could, and typically performed only comparably when initialized with the random forest models.<br>
 (Random forests cannot enable indirect relationships between the target and the features, but gradient boosted models can learn these. For example, age clearly doesn't correlate with height. However, a player's performance strongly develops with age, and we predict height from performance - therefore the age attribute could indeed indirectly be useful.)
 
@@ -71,7 +75,8 @@ The models:
 - Gradient boosted classifiers: Both hyperparameter tuned, and not tuned. Among the untuned models, the strongest predictor was initialized with the random forest classifier.
 - Gradient boosted regressors: initialized with the random forest regressor.
 
-To show the strength of well organized data, the models were also trained on shuffled data.
+Training and test data is split in a way, that every player appears in only one of the datasets (players have multiple instances, because of multiple seasons, etc.).<br>
+To show the strength of this organization of instances, two models were also trained on shuffled data. The results showed it is better to train the models no player appearing in both train and test datasets.
 
 ### ..do the models compare?
 
@@ -81,7 +86,7 @@ There are multiple metrics to compare the models.
 - **+-1 inch accuracy, +-2, +-3**: The percentage of predictions that are within 1 inches of the true height.
 - **F1 score**: The harmonic mean of precision and recall. (Only for classifiers.)
 
-### ..do attributes correlate with height?
+### ..do attributes correlate with height? What do the results show?
 
 According to the random forest classifier SHAP values, this is the importance (impact, Shapley value) ranking of the attributes:
 
