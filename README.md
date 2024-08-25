@@ -8,24 +8,22 @@ Machine learning models used to predict the height of basketball players, from p
 The results show, that two regressors (one gradient boosted, and a random forest regressor) can predict the height of a player **within 1 inch 50% of the time**. Moreover, on the data the latter model predicted inside the (-7, 5) inch error range for every player; predicting inside +-2 inches for 72.9% of the players, and +-3 inches for 86.4% of the players.
 
 **Preprocessing, analysis, prediction:**: inside the `ml.ipynb` notebook<br> 
-**Data collection, some cleaning**: described in `fetch_players.ipynb`.
-
-**Data** is stored in the `data` folder.
+**Data collection, some cleaning**: described in `fetch_players.ipynb`.<br>
+Data is stored in the `data` folder, the combined data for training in the `data_combined.csv` file.
 
 A summary of the best models:
 
-| Model                                                | Data | Accuracy Score | +/-1 inch % | +/-2 inch % | +/-3 inch % | F1 Score | Error Range   |
-|------------------------------------------------------|------|----------------|-------------|-------------|-------------|----------|---------------|
-| Random forest: best classifier                             | All  | **17.6%**      | 45.3%       | 70.3%       | 83.7%       | **0.155**| -8 , 6        |
-| Ensembled (manually biased) forest                            | All  | 16.2%          | **49.0%**   | **71.3%**   | **85.4%**   | 0.149    | -8 , 5        |
-| Random forest: best regressor                              | All  | -              | **50.0%**   | **72.9%**   | **86.4%**   | -        | **-7 , 5**    |
-| Best gradient boosted regressor       | All  | -              | **49.9%**   | 69.1%       | 84.5%       | -        | -8 , 6        |
+| Model                                                | Accuracy Score | +/-1 inch % | +/-2 inch % | +/-3 inch % | F1 Score | Error Range   |
+|------------------------------------------------------|----------------|-------------|-------------|-------------|----------|---------------|
+| Random forest: best classifier                       | **17.6%**      | 45.3%       | 70.3%       | 83.7%       | **0.155**| -8 , 6        |
+| Ensembled (manually biased) forest                   | 16.2%          | **49.0%**   | **71.3%**   | **85.4%**   | 0.149    | -8 , 5        |
+| Best RF regressor                                    | -              | **50.0%**   | **72.9%**   | **86.4%**   | -        | **-7 , 5**    |
+| Best gradient boosted regressor                      | -              | **49.9%**   | 69.1%       | 84.5%       | -        | -8 , 6        |
 
 The pipeline picture:
 
 <div style="align: center;">
-    <div style="width: 500px; margin: 0 auto"><img src="img/pipeline.svg" title="NBA player height prediction from performance and playstyle - Pipeline" height="500px"/></div>
-    
+    <div style="width: 500px; margin: 0 auto"><img src="img/pipeline.svg" title="NBA player height prediction from performance and playstyle - Pipeline" height="250px"/></div>
 </div>
 
 
@@ -55,7 +53,9 @@ Typical instances of the final dataframe are:
 | 1631260   | 2022-23    | 23  | 77                   | 190            | 0.016    | 0.105    | 0.607  | 345    | 0.362319| 0.424   | 0.304348| 0.419   | 0.011594| 0.0    | 0.089855|
 | 203932    | 2021-22    | 27  | 80                   | 235            | 0.086    | 0.136    | 0.617  | 2055   | 0.370316| 0.564   | 0.084185| 0.347   | 0.092944| 0.024818| 0.062774|
 
-We predict the `PLAYER_HEIGHT_INCHES` from the other attributes. As one can see from 
+We predict the `PLAYER_HEIGHT_INCHES` from the other attributes. As one can see from the table, aside defensive and shooting statistics there are assist statistics as well. The key predictors are the rebounds, and personal fouls - a higher value of these generally predicts higher height value.<br>
+
+The explanation of the attributes is given in the `Explanation of attributes` section below, and in the `ml.ipynb` notebook.
 
 ### .. were the models chosen and trained?
 
@@ -90,7 +90,16 @@ According to the random forest classifier SHAP values, this is the importance (i
 </div>
 
 As we can see, both age and minutes played matter the least, considerably less than any other attribute - indicating that they likely do not matter at all.<br>
-However, random forests can only model direct relationships, not indirect ones - and we know that age (and minutes) correlates with performance, which we use to predict height.
+However, random forests can only model direct relationships, not indirect ones - and we know that age (and minutes) correlates with performance, which we use to predict height. Hence these attributes for gradient boosted models could be more important than showcased here, and may be utilized better for better predictions.
+
+The rebound attributes are most important, followed by the personal fouls, these stand out among the other attributes. This proved our initial hypothesis, formed from the data exploration and analysis:
+
+<div style="align: center;">
+    <div style="width: 500px; margin: 0 auto"><img src="img/rebounds_by_height.png" title="Diagram plot: offensive and defensive rebounds by height"/></div>
+</div>
+
+There is a steady increase in rebounds with height, these were clear indicators that the rebound statistics are good predictors of height.
+
 ## Results table
 
 | Model                                                | Data | Accuracy Score | +/-1 inch % | +/-2 inch % | +/-3 inch % | F1 Score | Error Range   |
@@ -117,4 +126,39 @@ We also see that it is better to train the model with players not appearing in b
 
 Outdated summary [pdf file](https://github.com/me9hanics/ml-nba-height-from-performance/blob/main/ml-nba-height-from-performance.pdf) for overall explanation.
 
+Link on my [personal website](https://me9hanics.github.io/): [Projects](https://me9hanics.github.io/projects.html), [NBA Height Prediction](https://me9hanics.github.io/projects/nba-height-prediction.html) (to be added).
 
+## Explanation of attributes
+
+|Attribute|Meaning|Extra info|
+|---|---|---|
+|MIN|minutes   |   |
+|FG, FG3, FT|Field goal (2 point goals), field goal 3 pointers, free throws ("penalty throws", 1 point)-  |M: Made (scored), A: attempted, PCT: percentage    |
+| REB  |Rebounds   |OREB/DREB: Offensive/defensive rebound  |
+|AST|Assists   |AST_PCT: Assist percentage   |
+|STL|Steals   |   |
+|BLK|Blocks   |   |
+|TOV|Turnovers   | Negative statistic  |
+|PF|Personal fouls   | Negative statistic  |
+|PTS|Points   |   |
+|---|--------------------------------------------------------------------| --------------------------------------------------------------------  |
+|DRAFT|Each year before the season starts, 60(?) college newcomers can be drafted by teams   |More "promising" players are drafted in earlier rounds   |
+|GP, GS|Games played, games started   |   |
+|NET_RATING|Offensive rating - defensive rating   |For a player: measure for how many goals a team scores with him vs. allow in. Can be negative.   |
+|USG_PCT|Usage percentage   | Estimate of percentage of team plays    |
+|TS_PCT|True shooting percentage   | Measures how well a player shoots-  |
+
+### What attributes are most important?
+
+Here is my explanation of rating attributes one by one (pre-analysis and model building):
+
+- Position: Can play a significant role in statistics, and can "suggest" the player's physical attributes. However, there was no data particularly on which position a player is playing preferably. This is because it can change game to game, and to obtain that data I'd have to fetch it from all matches and look at where they play most commonly. This, in case of this API is not really feasible, would take unbearable time. So I have to work without this attribute. (Positions: Point guard, Shooting guard, Small forward, Power forward, Center)<br>
+- Age: Hard to tell. As I said, it doesn't correlate with height, but it correlates with performance on which we predict height. Especially for clustering. I think for "attempts" stats, age should not really matter however. <br>
+- FG, FG3, FT: I would drop FT_PCT, it's "throwing skill". FTA is not relevant, but FTM may be. For field goals, my thought was "made" is more important than attempt as it suggests success, and made/attempt ratio would suggest even better how successful the player is. <br>
+But one of the key ideas I wanted to know is whether "smaller" players tend to play different than other players: do they throw more from far away, as they struggle to penetrate from close, or it's exactly the opposite: they use their agility to score from close? For that, attempts per minute may be a better predictor. I decided on first using attempts alongside made/attempt ratio, we may get some results like short players are less successful in scoring 2-pointers.<br>
+- REB: I would either drop OREB, DREB, and keep REB(_PM) with position, or keep only OREB+DREB. Since we don't have a position attribute, I keep OREB and DREB as indicators on "position". (As we see from the results, these turned out to be some of the most important attributes). BLK: keep, because some short players even have 0 blocks after many matches. TOV: drop, I guess not really relevant with height, PF: maybe relevant I'll keep it at first. STL: Not sure, but from the data it spans really thin, probably not a good predictor so I drop.<br>
+- AST: Drop all. It is more of a skill/team stat. (Although might have some significance, like in soccer the small, fast, agile wingers cross the ball to the big, strong striker who can head it in.) <br>
+- PTS: Not needed, we have other points stats <br>
+- DRAFT: I'd skip. I thought it can find extreme cases like Giannis being 6'11, but he was only 15th pick.<br>
+- NET_RATING: Skip. USG: Undecided, TS: I'd keep. <br>
+- Anything else: skip. <br>
