@@ -12,7 +12,35 @@ The results show, that two regressors (one gradient boosted, and a random forest
 
 **Data** is stored in the `data` folder.
 
-Results:
+A summary of the best models:
+
+| Model                                                | Data | Accuracy Score | +/-1 inch % | +/-2 inch % | +/-3 inch % | F1 Score | Error Range   |
+|------------------------------------------------------|------|----------------|-------------|-------------|-------------|----------|---------------|
+| Random forest: best classifier                             | All  | **17.6%**      | 45.3%       | 70.3%       | 83.7%       | **0.155**| -8 , 6        |
+| Ensembled (manually biased) forest                            | All  | 16.2%          | **49.0%**   | **71.3%**   | **85.4%**   | 0.149    | -8 , 5        |
+| Random forest: best regressor                              | All  | -              | **50.0%**   | **72.9%**   | **86.4%**   | -        | **-7 , 5**    |
+| Best gradient boosted regressor       | All  | -              | **49.9%**   | 69.1%       | 84.5%       | -        | -8 , 6        |
+
+The pipeline picture:
+
+<div style="text-align: center;">
+    <img src="img/pipeline.svg" title="NBA player height prediction from performance and playstyle - Pipeline" height="500"/>
+</div>
+
+
+# How..
+
+## to run?
+
+I recommend to just download (clone) the whole repository.
+
+The dependencies are listed in the `requirements.in` and the `requirements.txt` file.<br>
+After downloading the repository, in your command line shell go to this directory, choose/create a `Python`/`conda`/`virtualenv` environment and run `pip install -r requirements.txt`.<br>
+If you want to fetch the data yourself (which is already fetched and stored in the `data` folder), you additionally need to run `pip install nba_api` to use the package, in the `fetch_players.ipynb` notebook.<br>
+
+
+
+## Results table
 
 | Model                                                | Data | Accuracy Score | +/-1 inch % | +/-2 inch % | +/-3 inch % | F1 Score | Error Range   |
 |------------------------------------------------------|------|----------------|-------------|-------------|-------------|----------|---------------|
