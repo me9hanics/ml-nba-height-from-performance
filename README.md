@@ -23,23 +23,74 @@ A summary of the best models:
 
 The pipeline picture:
 
-<div style="text-align: center;">
-    <img src="img/pipeline.svg" title="NBA player height prediction from performance and playstyle - Pipeline" height="500"/>
+<div style="align: center;">
+    <div style="width: 500px; margin: 0 auto"><img src="img/pipeline.svg" title="NBA player height prediction from performance and playstyle - Pipeline" height="500px"/></div>
+    
 </div>
 
 
-# How..
+## How..
 
-## to run?
+### ..to run?
 
 I recommend to just download (clone) the whole repository.
 
-The dependencies are listed in the `requirements.in` and the `requirements.txt` file.<br>
-After downloading the repository, in your command line shell go to this directory, choose/create a `Python`/`conda`/`virtualenv` environment and run `pip install -r requirements.txt`.<br>
+After downloading the repository, in your command line shell go to this directory, choose/create a `Python`/`conda`/`virtualenv` environment and run `pip install -r requirements.txt`.(The dependencies are listed both in the `requirements.in` and the `requirements.txt` files.)<br>
+Then just run the `ml.ipynb` notebook cells in some Jupyter environment.
+
 If you want to fetch the data yourself (which is already fetched and stored in the `data` folder), you additionally need to run `pip install nba_api` to use the package, in the `fetch_players.ipynb` notebook.<br>
 
+### ..is the data collected and processed?
 
+The NBA website has a [statistics](https://www.nba.com/stats) subpage (and other subpages for other data) containing data about team statistics and player statistics, including biography (height, weight, age etc.) and career stats. There are multiple APIs provided by the website, but conviniently the `nba_api` package provides one Python interface to these APIs. The data is collected using this package, as shown in the `fetch_players.ipynb` notebook.<br>
+The separate career (and filtered career) and biographical datasets are stored in the respective `csv` files.
 
+To rightly train models, data is combined, processed and saved (in the general form for most models) in the `data_combined.csv` file. This procedure is described in the `ml.ipynb` notebook. (An example step is to normalize statistics by minutes played to get more meaningful features, or removing players who played less than 3 matches time in a season.)
+
+Typical instances of the final dataframe are:
+
+| PLAYER_ID | SEASON_ID | AGE | PLAYER_HEIGHT_INCHES | PLAYER_WEIGHT | OREB_PCT | DREB_PCT | TS_PCT | MIN   | FGA_PM  | FG_PCT  | FG3A_PM | FG3_PCT | FTM_PM  | BLK_PM | PF_PM  |
+|-----------|------------|-----|----------------------|----------------|----------|----------|--------|--------|---------|---------|---------|---------|---------|--------|--------|
+| 1630639   | 2022-23    | 22  | 78                   | 179            | 0.046    | 0.152    | 0.589  | 217    | 0.40553 | 0.662667| 0.230415| 0.266667| 0.018433| 0.0    | 0.101382|
+| 1631260   | 2022-23    | 23  | 77                   | 190            | 0.016    | 0.105    | 0.607  | 345    | 0.362319| 0.424   | 0.304348| 0.419   | 0.011594| 0.0    | 0.089855|
+| 203932    | 2021-22    | 27  | 80                   | 235            | 0.086    | 0.136    | 0.617  | 2055   | 0.370316| 0.564   | 0.084185| 0.347   | 0.092944| 0.024818| 0.062774|
+
+We predict the `PLAYER_HEIGHT_INCHES` from the other attributes. As one can see from 
+
+### .. were the models chosen and trained?
+
+As instances of data (players) are rare, noisy (players play very different regardless of height) but attributes are common, more basic models are good choices such as random forests. For improved results, gradient boosted models are also trained. These models however don't have enough data and computing power (e.g. hyperparameter tuning) to perform as well as they could, and typically performed only comparably when initialized with the random forest models.<br>
+(Random forests cannot enable indirect relationships between the target and the features, but gradient boosted models can learn these. For example, age clearly doesn't correlate with height. However, a player's performance strongly develops with age, and we predict height from performance - therefore the age attribute could indeed indirectly be useful.)
+
+The models:
+
+- Decision tree: simple model, hyperparameter tuned - just for comparison
+- Random forest classifier: hyperparameter tuned
+- Ensemble forests: A simple random forest-like model (most common choice, "argmax") and a model that averages the predictions of the trees. (The latter is more biased, hence less common, but does better in most important metrics here.)
+- Random forest regressor: using the same hyperparameters as the classifier
+- Gradient boosted classifiers: Both hyperparameter tuned, and not tuned. Among the untuned models, the strongest predictor was initialized with the random forest classifier.
+- Gradient boosted regressors: initialized with the random forest regressor.
+
+To show the strength of well organized data, the models were also trained on shuffled data.
+
+### ..do the models compare?
+
+There are multiple metrics to compare the models.
+
+- **Accuracy**: The percentage of correct predictions. (Only for classifiers.)
+- **+-1 inch accuracy, +-2, +-3**: The percentage of predictions that are within 1 inches of the true height.
+- **F1 score**: The harmonic mean of precision and recall. (Only for classifiers.)
+
+### ..do attributes correlate with height?
+
+According to the random forest classifier SHAP values, this is the importance (impact, Shapley value) ranking of the attributes:
+
+<div style="align: center;">
+    <div style="width: 500px; margin: 0 auto"><img src="img/forest_shap.png" title="Random forest classifier - Shapley values"/></div>
+</div>
+
+As we can see, both age and minutes played matter the least, considerably less than any other attribute - indicating that they likely do not matter at all.<br>
+However, random forests can only model direct relationships, not indirect ones - and we know that age (and minutes) correlates with performance, which we use to predict height.
 ## Results table
 
 | Model                                                | Data | Accuracy Score | +/-1 inch % | +/-2 inch % | +/-3 inch % | F1 Score | Error Range   |
