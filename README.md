@@ -1,3 +1,11 @@
+[![website-img]][website link]
+[![website-project-img]][website-project link]
+
+[website-img]: https://img.shields.io/badge/Website-me9hanics.github.io-blue?style=flat-square
+[website link]: https://me9hanics.github.io/
+[website-project-img]: https://img.shields.io/badge/Project_subpage-grey?style=flat-square
+[website-project link]: https://me9hanics.github.io/projects/nba-height-prediction.html
+
 # NBA Height Prediction from Performance
 
 Machine learning models used to predict the height of basketball players, from playstyle and performance statistics. Data collected using the `nba_api` package, of the previous 20 seasons.
@@ -122,8 +130,10 @@ There is a steady increase in rebounds with height, these were clear indicators 
 | Gradient boosted regressor, with shuffled data   | Shuffled | -              | 38.6%       | 67.1%       | 82.8%       | -        | -12 , 6       |
 
 The gradient boosted methods underperformed likely because of lack of data, and the scikit-learn implementation not being state of the art (like XGBoost).<br>
-**Classifiers**: In **accuracy**, only are used for evaluation, and the **random forest classifier** does the best with **17.6%** (and had the highest F-score), only the gradient boosted classifier initialized from its parameters manages to go above 17% accuracy. The **averaging ensemble forest method** however had the **best scores in all other categories (+-N inch ranges, error range)**, and came close to the best regressor method in all categories.<br>
-**Regresssors**: We find that random forest regressor works, as the only model hitting **50% accuracy in the +-1 inch range**. It also hits the highest score in all other categories: **72.9% +-2 inch accuracy, 86.4% +-3 inch accuracy, and -7,5 error range**. Among the gradient boosted regressors, only the regressor initialized from the random forest does comparably, with 49.9% accuracy in +-1 inch range. <br>
+**Classifiers**: In **accuracy**, only are used for evaluation, and the **random forest classifier** does the best with **17.6%** (and had the highest F-score), only the gradient boosted classifier initialized from its parameters manages to go above 17% accuracy.<br>The **averaging ensemble forest method** however had the **best scores in all other categories (+-N inch ranges, error range)**, and came close to the best regressor method in all categories.
+
+**Regressors**: We find that random forest regressor works, as the only model hitting **50% accuracy in the +-1 inch range**. It also hits the highest score in all other categories: **72.9% +-2 inch accuracy, 86.4% +-3 inch accuracy, and -7,5 error range**.<br>
+Among the gradient boosted regressors, only the regressor initialized from the random forest does comparably, with 49.9% accuracy in +-1 inch range. 
 
 This means, that the random forest regressor can **predict the height of a player within 1 inch half of the time**. This is a strong result for such a noisy problem.<br>
 
