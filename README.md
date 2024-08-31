@@ -35,9 +35,9 @@ The pipeline picture:
 </div>
 
 
-## How..
+## How..?
 
-### ..to run?
+### How to run?
 
 - I recommend to just download (clone) the whole repository.
 
@@ -46,7 +46,7 @@ Then just run the `ml.ipynb` notebook cells in some Jupyter environment.
 
 If you want to fetch the data yourself (which is already fetched and stored in the `data` folder), you additionally need to run `pip install nba_api` to use the package, in the `fetch_players.ipynb` notebook.<br>
 
-### ..is the data collected and processed?
+### How is the data collected and processed?
 
 - Collected using the `nba_api` package, from the NBA stats website.
 
@@ -67,7 +67,7 @@ We predict the `PLAYER_HEIGHT_INCHES` from the other attributes. As one can see 
 
 The explanation of the attributes is given in the `Explanation of attributes` section below, and in the `ml.ipynb` notebook.
 
-### .. were the models chosen and trained?
+### How were the models chosen and trained?
 
 - Random forests, gradient boosted models, and specially ensembling forests were chosen, and a tree for comparison. Training and test data is split in a way, that every player appears in only one of the datasets.
 
@@ -86,7 +86,7 @@ The models:
 Training and test data is split in a way, that every player appears in only one of the datasets (players have multiple instances, because of multiple seasons, etc.).<br>
 To show the strength of this organization of instances, two models were also trained on shuffled data. The results showed it is better to train the models no player appearing in both train and test datasets.
 
-### ..do the models compare?
+### How do the models compare?
 
 There are multiple metrics to compare the models.
 
@@ -94,7 +94,7 @@ There are multiple metrics to compare the models.
 - **+-1 inch accuracy, +-2, +-3**: The percentage of predictions that are within 1 inches of the true height.
 - **F1 score**: The harmonic mean of precision and recall. (Only for classifiers.)
 
-### ..do attributes correlate with height? What do the results show?
+### How do attributes correlate with height? What do the results show?
 
 According to the random forest classifier SHAP values, this is the importance (impact, Shapley value) ranking of the attributes:
 
@@ -167,7 +167,7 @@ Link on my [personal website](https://me9hanics.github.io/): [Projects](https://
 
 Here is my explanation of rating attributes one by one (pre-analysis and model building):
 
-- Position: Can play a significant role in statistics, and can "suggest" the player's physical attributes. However, there was no data particularly on which position a player is playing preferably. This is because it can change game to game, and to obtain that data I'd have to fetch it from all matches and look at where they play most commonly. This, in case of this API is not really feasible, would take unbearable time. So I have to work without this attribute. (Positions: Point guard, Shooting guard, Small forward, Power forward, Center)<br>
+- Position: **There is no attribute for position.** Otherwise, it could play a significant role in statistics, and could "suggest" the player's physical attributes - it'd be a very valuable predictor. The absence reason is because the NBA does not provide this information as it is not trivially defined. Positions changed a lot throughout the years, nowadays there seems to be mostly 3 positions only whereas it used to be 5 distinguishable positions, moreover it can change game to game and team to team. To obtain such data, there are some predictors that predict the position of players, or calculate them, usually on matches. For that, I'd have to fetch it from all matches and look at where they play most commonly. In the case of this API, this is not really feasible. It would take too much requests and time, so we work without this attribute. (Positions: Point guard, Shooting guard, Small forward, Power forward, Center)<br>
 - Age: Hard to tell. As I said, it doesn't correlate with height, but it correlates with performance on which we predict height. Especially for clustering. I think for "attempts" stats, age should not really matter however. <br>
 - FG, FG3, FT: I would drop FT_PCT, it's "throwing skill". FTA is not relevant, but FTM may be. For field goals, my thought was "made" is more important than attempt as it suggests success, and made/attempt ratio would suggest even better how successful the player is. <br>
 But one of the key ideas I wanted to know is whether "smaller" players tend to play different than other players: do they throw more from far away, as they struggle to penetrate from close, or it's exactly the opposite: they use their agility to score from close? For that, attempts per minute may be a better predictor. I decided on first using attempts alongside made/attempt ratio, we may get some results like short players are less successful in scoring 2-pointers.<br>
