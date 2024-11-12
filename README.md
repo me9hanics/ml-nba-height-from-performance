@@ -1,10 +1,16 @@
 [![website-img]][website link]
-[![website-project-img]][website-project link]
+[![website-project-img]][website-project link]<br>
+[![results-img]][results link]
+[![attributes-img]][attributes link]
 
 [website-img]: https://img.shields.io/badge/Website-me9hanics.github.io-blue?style=flat-square
 [website link]: https://me9hanics.github.io/
 [website-project-img]: https://img.shields.io/badge/Project_subpage-grey?style=flat-square
 [website-project link]: https://me9hanics.github.io/projects/nba-height-prediction.html
+[results-img]: https://img.shields.io/badge/Results-darkgreen?style=flat-square
+[results link]: https://github.com/me9hanics/ml-nba-height-from-performance?tab=readme-ov-file#results-table
+[attributes-img]: https://img.shields.io/badge/Attributes_predictive_power-darkgreen?style=flat-square
+[attributes link]: https://github.com/me9hanics/ml-nba-height-from-performance?tab=readme-ov-file#how-do-attributes-correlate-with-height-what-do-the-results-show
 
 # NBA Height Prediction from Performance
 
@@ -143,7 +149,7 @@ Outdated summary [pdf file](https://github.com/me9hanics/ml-nba-height-from-perf
 
 Link on my [personal website](https://me9hanics.github.io/): [Projects](https://me9hanics.github.io/projects.html), [NBA Height Prediction](https://me9hanics.github.io/projects/nba-height-prediction.html) (to be added).
 
-## Explanation of attributes
+## Attributes: Explanation & importance
 
 |Attribute|Meaning|Extra info|
 |---|---|---|
