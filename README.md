@@ -25,6 +25,12 @@ The results show, that two regressors (one gradient boosted, and a random forest
 **Data collection, some cleaning**: described in `fetch_players.ipynb`.<br>
 Data is stored in the `data` folder, the combined data for training in the `data_combined.csv` file.
 
+The pipeline picture:
+
+<div style="align: center;">
+    <div style="width: 500px; margin: 0 auto"><img src="img/pipeline.svg" title="NBA player height prediction from performance and playstyle - Pipeline" height="350px"/></div>
+</div>
+
 A summary of the best models:
 
 | Model                                                | Accuracy Score | +/-1 inch % | +/-2 inch % | +/-3 inch % | F1 Score | Error Range   |
@@ -33,12 +39,6 @@ A summary of the best models:
 | Ensembled (manually biased) forest                   | 16.2%          | **49.0%**   | **71.3%**   | **85.4%**   | 0.149    | -8 , 5        |
 | Best RF regressor                                    | -              | **50.0%**   | **72.9%**   | **86.4%**   | -        | **-7 , 5**    |
 | Best gradient boosted regressor                      | -              | **49.9%**   | 69.1%       | 84.5%       | -        | -8 , 6        |
-
-The pipeline picture:
-
-<div style="align: center;">
-    <div style="width: 500px; margin: 0 auto"><img src="img/pipeline.svg" title="NBA player height prediction from performance and playstyle - Pipeline" height="350px"/></div>
-</div>
 
 
 ## How..?
